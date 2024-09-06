@@ -1,0 +1,31 @@
+pipeline{
+    agent none
+    stages{
+        stage('Backend'){
+            agent{
+                docker {image 'node:16-alpine'}
+            }
+            steps{
+                sh 'node --version'
+            }
+
+        }
+        stage('Frontend'){
+        agent{
+            docker{image 'python:latest'}
+        }
+        steps{
+            sh 'print("Done Working")'
+        }
+        }
+    }
+        post {
+        success {
+            echo 'Pipeline has been executed successfully!'
+        }
+        failure {
+            echo 'Pipeline execution failed.'
+        }
+    }
+
+}
