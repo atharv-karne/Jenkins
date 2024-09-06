@@ -1,40 +1,47 @@
-pipeline{
+pipeline {
     agent none
     
-        environment {
+    environment {
         DOCKER_IMAGE_NAME = 'my-node-app'
         DOCKER_IMAGE_TAG = 'latest'
         ECR_REPO_NAME = 'Pipeline-repo'  
-        AWS_REGION = 'ap-south-1'  
+        AWS_REGION = 'ap-south-1'
+        ECR_REPO_URL = ''
+        CONTAINER_NAME = 'my-node-app-container'
+        APP_PORT = '3000'
     }
-    stages
-    {
-
-        stage('Infra_apply')
-        {
+    
+    stages {
+        stage('Infra_apply') {
             agent any
-
-            sh 'terraform init'
-            sh 'terraform apply -auto-approve'
-            ECR_REPO_URL = sh(
-            script: "terraform output -raw ecr_repository_url",returnStdout: true).trim()
-
-            env.ECR_REPO_URL = ECR_REPO_URL
-                    
-            echo "ECR Repository URL: ${ECR_REPO_URL}"
+            steps {
+                script {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
+                    ECR_REPO_URL = sh(
+                        script: "terraform output -raw ecr_repository_url",
+                        returnStdout: true
+                    ).trim()
+                    env.ECR_REPO_URL = ECR_REPO_URL
+                    echo "ECR Repository URL: ${ECR_REPO_URL}"
+                }
+            }
         }
+        
         stage('Docker Image build and push') {
             agent any
             steps {
                 script {
                     docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f Dockerfile .")
-                    docker.withRegistry('https://your-registry-url', 'AWS-Cred') {
-                    docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}").push()
+                    docker.withRegistry("https://${ECR_REPO_URL}", 'AWS-Cred') {
+                        docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}").push()
                     }
                 }
             }
         }
+        
         stage('Deploy container') {
+            agent any
             steps {
                 script {
                     sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URL}"
@@ -46,8 +53,7 @@ pipeline{
                     sh "docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT}:${APP_PORT} ${ECR_REPO_URL}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
                     sh "docker ps | grep ${CONTAINER_NAME}"
                 }
-            
+            }
         }
     }
 }
-
