@@ -1,0 +1,52 @@
+pipeline {
+    agent {
+        docker {
+            image 'node:14-alpine' 
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                sh 'echo "Node version: $(node -v)"'
+                sh 'echo "NPM version: $(npm -v)"'
+                sh 'echo "This is where we would build the application"'
+                sh 'sleep 5'  
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'echo "Running test 1..."'
+                sh 'sleep 2'
+                sh 'echo "Running test 2..."'
+                sh 'sleep 2'
+                sh 'echo "Running test 3..."'
+                sh 'sleep 2'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                sh 'echo "Preparing for deployment..."'
+                sh 'sleep 3'
+                sh 'echo "Deploying to production server..."'
+                sh 'sleep 3'
+                sh 'echo "Deployment complete!"'
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline execution failed.'
+        }
+    }
+}
