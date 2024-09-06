@@ -12,6 +12,17 @@ pipeline {
     }
     
     stages {
+        stage('Docker Image build and push') {
+            agent any
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f Dockerfile .")
+                    docker.withRegistry("https://${ECR_REPO_URL}", 'AWS-Cred') {
+                        docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}").push()
+                    }
+                }
+            }
+        }
         stage('Infra_apply') {
             agent any
             steps {
@@ -27,19 +38,6 @@ pipeline {
                 }
             }
         }
-        
-        stage('Docker Image build and push') {
-            agent any
-            steps {
-                script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f Dockerfile .")
-                    docker.withRegistry("https://${ECR_REPO_URL}", 'AWS-Cred') {
-                        docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}").push()
-                    }
-                }
-            }
-        }
-        
         stage('Deploy container') {
             agent any
             steps {
