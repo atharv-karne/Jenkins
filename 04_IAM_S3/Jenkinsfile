@@ -1,3 +1,4 @@
+
 pipeline {
     agent none
 
@@ -11,19 +12,14 @@ pipeline {
         stage('Terraform apply') {
             agent any
             steps {
-               {
-                    script {
-                        withCredentials([aws(credentialsId: 'Aws-Cred', region: 'ap-south-1')])
-                        {
-                             dir('./04_IAM_S3') 
-                             {
+                script {
+                    // Use AWS credentials for Terraform
+                    withCredentials([aws(credentialsId: 'Aws-Cred', region: 'ap-south-1')]) {
+                        dir('04_IAM_S3') {
                             sh 'terraform init'
                             sh 'terraform apply -auto-approve'
-                             }                       
                         }
-
                     }
-
                 }
             }
         }
