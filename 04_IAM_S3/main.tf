@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_iam_policy" "jk_tf_policy" {
-    name = "jenkins_policy"
+    name = "jenkins-policy"
     path = "/"
 
     policy = jsonencode(
@@ -24,7 +24,7 @@ resource "aws_iam_policy" "jk_tf_policy" {
 }
 
 resource "aws_iam_role" "jk_tf_role" {
-    name = "jenkins role"
+    name = "jenkins-role"
     assume_role_policy = aws_iam_policy.jk_tf_policy.id
   
 }
