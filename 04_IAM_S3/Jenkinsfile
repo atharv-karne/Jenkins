@@ -19,6 +19,7 @@ pipeline {
                 script {
                     dir(TERRAFORM_DIR) {
                         withCredentials([aws(credentialsId: TERRAFORM_CREDENTIALS_ID, region: AWS_REGION)]) {
+                            sh 'terraform destroy'
                             sh 'terraform init'
                         }
                     }
