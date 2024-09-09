@@ -11,16 +11,19 @@ pipeline {
         stage('Terraform apply') {
             agent any
             steps {
-                dir('./04_IAM_S3') {
+               {
                     script {
-                        try {
+                        withCredentials([aws(credentialsId: 'Aws-Cred', region: 'ap-south-1')])
+                        {
+                             dir('./04_IAM_S3') 
+                             {
                             sh 'terraform init'
                             sh 'terraform apply -auto-approve'
-                        } catch (Exception e) {
-                            echo "Error during Terraform apply: ${e}"
-                            currentBuild.result = 'FAILURE'
+                             }                       
                         }
+
                     }
+
                 }
             }
         }
