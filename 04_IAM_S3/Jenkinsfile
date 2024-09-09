@@ -4,7 +4,9 @@ pipeline{
     stages{
         stage('Starting execution')
         {
+            steps{
              echo 'Pipeline has been started succesfully!'
+            }        
         }
 
          stage('Terraform apply')
