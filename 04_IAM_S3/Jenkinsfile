@@ -9,10 +9,12 @@ pipeline{
 
          stage('Terraform apply')
          {
+            steps{
             sh '''
             terraform init
             terraform apply auto-approve
             '''
+            }
          }
     }
    
