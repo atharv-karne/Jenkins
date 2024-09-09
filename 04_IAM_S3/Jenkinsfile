@@ -11,7 +11,7 @@ pipeline {
         stage('Terraform apply') {
             agent any
             steps {
-                dir('/04_IAM_S3') {
+                dir('./04_IAM_S3') {
                     script {
                         try {
                             sh 'terraform init'
