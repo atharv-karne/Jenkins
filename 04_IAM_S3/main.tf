@@ -11,7 +11,7 @@ resource "aws_iam_policy" "jk_tf_policy" {
   path   = "/"
 
   policy = jsonencode({
-    version = "2012-10-17",
+    Version = "2012-10-17",
     Statement = [
       {
         Action   = "ec2:*",
