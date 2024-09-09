@@ -22,45 +22,21 @@ resource "aws_iam_role" "jk_tf_role" {
   name = "jenkins-role"
 
   assume_role_policy = jsonencode(
-    {
+   {
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Action": "ec2:*",
             "Effect": "Allow",
+            "Action": [
+                "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:Describe*",
+                "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                "elasticloadbalancing:DeregisterTargets",
+                "elasticloadbalancing:Describe*",
+                "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+                "elasticloadbalancing:RegisterTargets"
+            ],
             "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "elasticloadbalancing:*",
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "cloudwatch:*",
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "autoscaling:*",
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "iam:CreateServiceLinkedRole",
-            "Resource": "*",
-            "Condition": {
-                "StringEquals": {
-                    "iam:AWSServiceName": [
-                        "autoscaling.amazonaws.com",
-                        "ec2scheduled.amazonaws.com",
-                        "elasticloadbalancing.amazonaws.com",
-                        "spot.amazonaws.com",
-                        "spotfleet.amazonaws.com",
-                        "transitgateway.amazonaws.com"
-                    ]
-                }
-            }
         }
     ]
 }
@@ -73,5 +49,5 @@ resource "aws_iam_role_policy_attachment" "jk_tf_policy_attachment" {
 }
 
 resource "aws_s3_bucket" "jk_tf_s3_bucket" {
-  bucket = "unique-jk-tf-bucket-2323" # 
+  bucket = "unique-jk-tf-bucket-2323" 
 }
