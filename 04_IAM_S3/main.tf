@@ -4,8 +4,6 @@ provider "aws" {
 
 resource "aws_iam_policy" "jk_tf_policy" {
   name   = "jenkins-policy"
-  path   = "/"
-
   policy = jsonencode({
     version = "2012-10-17",
     Statement = [
@@ -14,7 +12,7 @@ resource "aws_iam_policy" "jk_tf_policy" {
           "ec2:*"
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = ["*"]
       }
     ]
   })
