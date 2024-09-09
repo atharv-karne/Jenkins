@@ -35,8 +35,7 @@ resource "aws_iam_role" "jk_tf_role" {
                 "elasticloadbalancing:Describe*",
                 "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
                 "elasticloadbalancing:RegisterTargets"
-            ],
-            "Resource": "*"
+            ]
         }
     ]
 }
