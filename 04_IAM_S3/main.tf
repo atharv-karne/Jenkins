@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "jk_tf_s3_bucket" {
-  bucket = "unique-jk-tf-bucket-1234567890"  # Ensure this bucket name is globally unique
+  bucket = "unique-jk-tf-bucket-1234567890"  
 }
 
 resource "aws_iam_policy" "jk_tf_policy" {
