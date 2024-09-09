@@ -13,7 +13,7 @@ pipeline {
             agent any
             steps {
                 script {
-                    withCredentials([aws(credentialsId: 'Aws-Cred')]) {
+                    withCredentials([aws(credentialsId: 'AWS-Cred')]) {
                         dir('04_IAM_S3') {
                             sh 'terraform init'
                             sh 'terraform apply -auto-approve'
