@@ -14,11 +14,12 @@ pipeline{
             agent any
             steps{
             dir('/04_IAM_S3')
-
+            {
             sh '''
             terraform init
             terraform apply -auto-approve
             '''
+            }
             }
          }
     }
