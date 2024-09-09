@@ -1,0 +1,19 @@
+pipeline{
+    agent none
+
+    stages{
+        stage('Starting execution')
+        {
+             echo 'Pipeline has been started succesfully!'
+        }
+
+         stage('Terraform apply')
+         {
+            sh '''
+            terraform init
+            terraform apply auto-approve
+            '''
+         }
+    }
+   
+}
