@@ -1,6 +1,11 @@
-
 pipeline {
-    agent none
+    agent any
+
+    environment {
+        AWS_REGION = 'ap-south-1'
+        TERRAFORM_DIR = './04_IAM_S3' 
+        TERRAFORM_CREDENTIALS_ID = 'AWS-Cred'
+    }
 
     stages {
         stage('Starting execution') {
@@ -9,18 +14,34 @@ pipeline {
             }
         }
 
-        stage('Terraform apply') {
-            agent any
+        stage('Terraform Init') {
             steps {
                 script {
-                    withCredentials([aws(credentialsId: 'AWS-Cred')]) {
-                        dir('04_IAM_S3') {
+                    dir(TERRAFORM_DIR) {
+                        withCredentials([aws(credentialsId: TERRAFORM_CREDENTIALS_ID, region: AWS_REGION)]) {
                             sh 'terraform init'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                script {
+                    dir(TERRAFORM_DIR) {
+                        withCredentials([aws(credentialsId: TERRAFORM_CREDENTIALS_ID, region: AWS_REGION)]) {
                             sh 'terraform apply -auto-approve'
                         }
                     }
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
