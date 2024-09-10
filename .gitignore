@@ -1,6 +1,10 @@
 04_Node_App/.terraform
 04_Node_App/.terraform.lock.hcl
 
+05_LambdaReadS3/.terraform
+05_LambdaReadS3/.terraform.lock.hcl
+
 04_NodeApp/node_modules
 
+./Screenshots
 
